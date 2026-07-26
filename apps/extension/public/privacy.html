@@ -33,7 +33,7 @@
   <body>
     <main>
       <h1>Privacy Policy — Is this site safe</h1>
-      <p class="muted">Last updated: July 2026 · Version 0.1.0</p>
+      <p class="muted">Last updated: July 2026 · Version 0.1.1</p>
       <p>
         <strong>Is this site safe</strong> is a Chrome extension by <strong>AI4Context</strong>. It
         checks a website URL <em>only when you ask</em> (current tab or a pasted URL). It does
@@ -42,8 +42,9 @@
       <h2>Data we process</h2>
       <ul>
         <li>
-          The URL you choose to check (from the active tab via <code>activeTab</code> on click, or
-          text you paste).
+          The URL you choose to check (from the active tab when you open the extension or tap
+          “Check this tab”, or text you paste). Tab URLs are read only on your request via the
+          <code>tabs</code> / <code>activeTab</code> permissions—not continuously.
         </li>
         <li>UI language preference in <code>chrome.storage.local</code> on your device.</li>
       </ul>

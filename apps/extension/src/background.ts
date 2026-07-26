@@ -9,21 +9,70 @@ function sessionLike(): chrome.storage.StorageArea {
   return chrome.storage.session ?? chrome.storage.local;
 }
 
-async function rememberActiveTabUrl(): Promise<void> {
+function isHttpUrl(url: string | undefined): url is string {
+  return Boolean(url && (url.startsWith('http://') || url.startsWith('https://')));
+}
+
+async function storeTabUrl(url: string | undefined): Promise<void> {
+  if (!isHttpUrl(url)) return;
+  await sessionLike().set({ [SESSION_TAB_URL_KEY]: url });
+}
+
+/** Prefer the tab Chrome passes on action click (activeTab); else a normal browser window tab. */
+async function captureBrowserTabUrl(preferred?: chrome.tabs.Tab): Promise<string | null> {
+  if (isHttpUrl(preferred?.url)) {
+    await storeTabUrl(preferred.url);
+    return preferred.url;
+  }
+
+  const panelPrefix = chrome.runtime.getURL(PANEL_PAGE).split(/[?#]/)[0];
+
+  const takeFromWindow = async (win: chrome.windows.Window | undefined): Promise<string | null> => {
+    if (!win || win.type !== 'normal') return null;
+    const tab = win.tabs?.find((t) => t.active);
+    if (!tab?.url || tab.url.split(/[?#]/)[0] === panelPrefix) return null;
+    if (!isHttpUrl(tab.url)) return null;
+    await storeTabUrl(tab.url);
+    return tab.url;
+  };
+
+  try {
+    const last = await chrome.windows.getLastFocused({ populate: true });
+    const fromLast = await takeFromWindow(last);
+    if (fromLast) return fromLast;
+  } catch {
+    /* ignore */
+  }
+
+  try {
+    const [active] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (isHttpUrl(active?.url) && active.url.split(/[?#]/)[0] !== panelPrefix) {
+      await storeTabUrl(active.url);
+      return active.url;
+    }
+  } catch {
+    /* ignore */
+  }
+
   try {
     const wins = await chrome.windows.getAll({ populate: true });
-    const panelPrefix = chrome.runtime.getURL(PANEL_PAGE).split(/[?#]/)[0];
-    const normal = wins.filter((w) => w.type === 'normal');
-    const focused = normal.find((w) => w.focused) ?? normal[0];
-    const tab = focused?.tabs?.find((t) => t.active);
-    const url = tab?.url ?? '';
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      await sessionLike().set({ [SESSION_TAB_URL_KEY]: url });
+    for (const w of wins) {
+      const fromWin = await takeFromWindow(w);
+      if (fromWin) return fromWin;
     }
-    if (tab?.url?.split(/[?#]/)[0] === panelPrefix) return;
   } catch (e) {
-    console.warn('[Is this site safe] remember tab url', e);
+    console.warn('[Is this site safe] capture tab url', e);
   }
+
+  try {
+    const data = await sessionLike().get(SESSION_TAB_URL_KEY);
+    const stored = data[SESSION_TAB_URL_KEY] as string | undefined;
+    if (isHttpUrl(stored)) return stored;
+  } catch {
+    /* ignore */
+  }
+
+  return null;
 }
 
 async function clearStoredPanelWindowId(): Promise<void> {
@@ -71,8 +120,8 @@ async function findExistingPanelWindow(): Promise<number | undefined> {
   return undefined;
 }
 
-async function openPanel(): Promise<void> {
-  await rememberActiveTabUrl();
+async function openPanel(fromTab?: chrome.tabs.Tab): Promise<void> {
+  await captureBrowserTabUrl(fromTab);
 
   if (await tryFocusStoredPanel()) return;
 
@@ -112,21 +161,24 @@ async function openPanel(): Promise<void> {
   }
 }
 
-chrome.action.onClicked.addListener(() => {
-  void openPanel();
+chrome.action.onClicked.addListener((tab) => {
+  void openPanel(tab);
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message?.type === 'itss.getLastTabUrl') {
-    void sessionLike()
-      .get(SESSION_TAB_URL_KEY)
-      .then((data) => {
-        sendResponse({ url: (data[SESSION_TAB_URL_KEY] as string | undefined) ?? null });
-      });
+    void (async () => {
+      const data = await sessionLike().get(SESSION_TAB_URL_KEY);
+      let url = (data[SESSION_TAB_URL_KEY] as string | undefined) ?? null;
+      // Re-resolve from a normal browser window (panel is usually focused now)
+      const fresh = await captureBrowserTabUrl();
+      if (fresh) url = fresh;
+      sendResponse({ url });
+    })();
     return true;
   }
   if (message?.type === 'itss.refreshTabUrl') {
-    void rememberActiveTabUrl().then(() => sendResponse({ ok: true }));
+    void captureBrowserTabUrl().then((url) => sendResponse({ ok: true, url }));
     return true;
   }
   return false;

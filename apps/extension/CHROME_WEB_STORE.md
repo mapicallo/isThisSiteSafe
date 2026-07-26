@@ -24,7 +24,7 @@ No tab monitoring. No alarms. By AI4Context. UI: English and Spanish.
 
 ## Permissions
 
-- `activeTab` — read the active tab URL only when you click Check this tab  
+- `activeTab` / `tabs` — read the active tab URL when you open the extension or tap Check this tab (not continuous monitoring)  
 - `storage` — UI language preference  
 
 ## Package

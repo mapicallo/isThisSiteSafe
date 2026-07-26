@@ -14,7 +14,7 @@ import {
   type TrustResult,
 } from './lib/evaluateUrl.js';
 
-const APP_VERSION = '0.1.0';
+const APP_VERSION = '0.1.1';
 
 const localeSelect = document.getElementById('locale-select') as HTMLSelectElement;
 const checkTabBtn = document.getElementById('check-tab-btn') as HTMLButtonElement;
