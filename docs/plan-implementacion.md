@@ -1,7 +1,8 @@
 # Is this site safe — Plan de implementación
 
 **Fecha:** 2026-07-26  
-**Estado:** Fase 0 / MVP v0.1.0 en curso  
+**Estado:** v0.1.1 en uso (UI + pestaña OK); **siguiente:** Fase 2 detección  
+**Plan Fase 2 (Safe Browsing):** [plan-fase-02-deteccion-safe-browsing.md](./plan-fase-02-deteccion-safe-browsing.md)  
 **Nombre CWS:** **Is this site safe** (sin `?` en el título de tienda; patrón Find my Phone)  
 **Repo:** https://github.com/mapicallo/isThisSiteSafe  
 **Workspace:** `C:\code-isThisSiteSafe\`  
