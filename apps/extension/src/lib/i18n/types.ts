@@ -30,7 +30,13 @@ export type MessageKey =
   | 'reason_suspiciousHost'
   | 'reason_localBlocklist'
   | 'reason_safeBrowsingHit'
+  | 'reason_safeBrowsingClean'
   | 'reason_safeBrowsingUnavailable'
+  | 'reason_safeBrowsingRateLimit'
+  | 'reason_threatMalware'
+  | 'reason_threatSocialEngineering'
+  | 'reason_threatUnwantedSoftware'
+  | 'reason_threatPha'
   | 'reason_localChecksOnly';
 
 export type Messages = Record<MessageKey, string>;

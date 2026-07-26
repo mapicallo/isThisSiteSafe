@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Is this site safe",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Check the current tab or paste a URL—green, orange, or red. On demand only. No background scanning.",
   "action": {
     "default_title": "Is this site safe",
@@ -16,6 +16,7 @@
     "type": "module"
   },
   "permissions": ["storage", "activeTab", "tabs"],
+  "host_permissions": ["https://www.ai4context.com/*"],
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",

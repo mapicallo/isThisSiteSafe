@@ -1,35 +1,22 @@
-export type TrustLevel = 'green' | 'orange' | 'red';
+import { runLocalHeuristics } from './heuristics.js';
+import { checkSafeBrowsing, type SbThreat } from './safeBrowsingClient.js';
+import type { TrustReasonCode, TrustResult } from './trustTypes.js';
 
-export type TrustReasonCode =
-  | 'httpsOk'
-  | 'httpOnly'
-  | 'invalidUrl'
-  | 'notHttp'
-  | 'ipHost'
-  | 'suspiciousHost'
-  | 'localBlocklist'
-  | 'safeBrowsingHit'
-  | 'safeBrowsingUnavailable'
-  | 'localChecksOnly';
+export type { TrustLevel, TrustReasonCode, TrustResult } from './trustTypes.js';
 
-export type TrustResult = {
-  level: TrustLevel;
-  url: string;
-  host: string;
-  reasons: TrustReasonCode[];
-};
-
-const LOCAL_BLOCK_HOSTS = new Set([
-  'testsafebrowsing.appspot.com',
-  'malware.testing.google.test',
-  'ianfette.org',
-]);
-
-const SUSPICIOUS_RE =
-  /(login|signin|verify|secure|account|update|banking|paypal|appleid|microsoft|wallet).{0,12}(confirm|alert|support|secure)/i;
-
-function looksLikeIp(host: string): boolean {
-  return /^(\d{1,3}\.){3}\d{1,3}$/.test(host) || host.includes(':');
+function threatReason(threat: SbThreat): TrustReasonCode | null {
+  switch (threat.threatType) {
+    case 'MALWARE':
+      return 'threatMalware';
+    case 'SOCIAL_ENGINEERING':
+      return 'threatSocialEngineering';
+    case 'UNWANTED_SOFTWARE':
+      return 'threatUnwantedSoftware';
+    case 'POTENTIALLY_HARMFUL_APPLICATION':
+      return 'threatPha';
+    default:
+      return null;
+  }
 }
 
 /** Normalize user or tab URL into https? URL string. */
@@ -58,9 +45,8 @@ export function normalizeUrlInput(raw: string): { ok: true; url: string } | { ok
 }
 
 /**
- * Local heuristic check (MVP).
- * Safe Browsing can be plugged in later; without it we never claim strong safety—
- * green = HTTPS + no local red flags (honest “local checks only”).
+ * Safe Browsing (via AI4Context proxy) + local heuristics.
+ * Green = no known alerts — not a 100% guarantee. Doubt → orange, never fake green.
  */
 export async function evaluateUrl(rawUrl: string): Promise<TrustResult> {
   const norm = normalizeUrlInput(rawUrl);
@@ -77,37 +63,48 @@ export async function evaluateUrl(rawUrl: string): Promise<TrustResult> {
   const host = parsed.hostname.toLowerCase();
   const reasons: TrustReasonCode[] = [];
 
-  if (LOCAL_BLOCK_HOSTS.has(host) || host.endsWith('.testing.google.test')) {
-    reasons.push('localBlocklist');
+  const sb = await checkSafeBrowsing(norm.url);
+
+  if (sb.status === 'ok' && sb.matched) {
+    reasons.push('safeBrowsingHit');
+    const seen = new Set<TrustReasonCode>();
+    for (const threat of sb.threats) {
+      const code = threatReason(threat);
+      if (code && !seen.has(code)) {
+        seen.add(code);
+        reasons.push(code);
+      }
+    }
     return { level: 'red', url: norm.url, host, reasons };
   }
 
-  if (parsed.protocol === 'http:') {
-    reasons.push('httpOnly');
+  const sbFailed = sb.status === 'error';
+  if (sbFailed) {
+    reasons.push(sb.code === 'RATE_LIMIT' ? 'safeBrowsingRateLimit' : 'safeBrowsingUnavailable');
+  }
+
+  const local = runLocalHeuristics(norm.url, host);
+
+  if (local.level === 'red') {
+    reasons.push(...local.reasons);
+    return { level: 'red', url: norm.url, host, reasons };
+  }
+
+  if (local.level === 'orange') {
+    reasons.push(...local.reasons);
     return { level: 'orange', url: norm.url, host, reasons };
   }
 
-  if (looksLikeIp(host)) {
-    reasons.push('ipHost');
+  // Local green path
+  reasons.push(...local.reasons);
+
+  if (sbFailed) {
+    // Never claim clean green if Safe Browsing did not confirm
     return { level: 'orange', url: norm.url, host, reasons };
   }
 
-  if (SUSPICIOUS_RE.test(host) || (host.split('.').length >= 4 && host.includes('-'))) {
-    reasons.push('suspiciousHost');
-    return { level: 'orange', url: norm.url, host, reasons };
-  }
-
-  // Hook for future Safe Browsing — currently unavailable in client MVP
-  reasons.push('httpsOk');
-  reasons.push('localChecksOnly');
-  reasons.push('safeBrowsingUnavailable');
-
-  return {
-    level: 'green',
-    url: norm.url,
-    host,
-    reasons,
-  };
+  reasons.push('safeBrowsingClean');
+  return { level: 'green', url: norm.url, host, reasons };
 }
 
 export function isCheckableTabUrl(url: string | undefined): boolean {

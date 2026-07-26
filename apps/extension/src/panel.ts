@@ -7,14 +7,13 @@ import {
   type Locale,
   type MessageKey,
 } from './lib/i18n/index.js';
+import { APP_VERSION } from './lib/config.js';
 import {
   evaluateUrl,
   isCheckableTabUrl,
   type TrustReasonCode,
   type TrustResult,
 } from './lib/evaluateUrl.js';
-
-const APP_VERSION = '0.1.1';
 
 const localeSelect = document.getElementById('locale-select') as HTMLSelectElement;
 const checkTabBtn = document.getElementById('check-tab-btn') as HTMLButtonElement;
