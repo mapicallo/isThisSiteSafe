@@ -1,6 +1,8 @@
 # Chrome Web Store — Is this site safe
 
-**Estado:** v0.2.0 — Safe Browsing vía proxy AI4Context. Publicación pendiente del cupo CWS (límite 20).
+> **Estado (2026-07-26):** paquete y pantallazos listos; publicación **pendiente del aumento de cupo** (límite 20 extensiones).  
+> Checklist completo → [`docs/pendiente-publicacion-cws.md`](../../docs/pendiente-publicacion-cws.md)  
+> ZIP: `releases/IsThisSiteSafe-v0.2.0.zip` · Capturas: `C:\pantallazos\isThisSiteSafe\` + `store-assets/*-1280x800.png`
 
 ## Listing copy (EN)
 
@@ -22,6 +24,15 @@ When you check a URL, it is sent once to AI4Context servers, which query Google 
 **Category:** Productivity (or Safety if available)  
 **Single purpose:** On-demand trust check for the current tab or a pasted URL.
 
+## Screenshots / promo
+
+**Capturas reales (originales):**  
+`C:\pantallazos\isThisSiteSafe\`  
+(`1_isThisSiteSafe.png` … `4_isThisSiteSafe.png`)
+
+**Listas para CWS (1280×800):**  
+`apps/extension/store-assets/screenshot-1-1280x800.png` … `screenshot-4-1280x800.png`
+
 ## Permissions
 
 - `activeTab` / `tabs` — read the active tab URL when you open the extension or tap Check this tab (not continuous monitoring)  
@@ -40,4 +51,5 @@ npm install
 npm run pack
 ```
 
-Artifact: `apps/extension/releases/IsThisSiteSafe-v{version}.zip`
+Artifact: `apps/extension/releases/IsThisSiteSafe-v{version}.zip`  
+Current ready package: **`IsThisSiteSafe-v0.2.0.zip`**
