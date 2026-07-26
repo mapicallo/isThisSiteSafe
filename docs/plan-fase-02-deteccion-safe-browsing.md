@@ -61,15 +61,22 @@ Pasar de “comprobaciones solo locales” a un semáforo respaldado por **fuent
 | Abuso de cuota a tu cargo | Rate limit / auth mínima |
 | Difícil compartir con PWA | Mismo endpoint para extensión + PWA |
 
-**Ubicación del proxy (decidir en implementación):**
+**Ubicación del proxy (cerrado):**
 
-| Opción | Pros | Contras |
-|--------|------|---------|
-| **A. Cloudflare Worker / Vercel edge** (recomendada) | Barato, rápido, fácil HTTPS | Ops nueva |
-| **B. Endpoint en ai4context.com** (si ya hay backend) | Misma infra | Acoplamiento |
-| **C. Cloud Function** | Escala | Más setup |
+| Opción | Estado |
+|--------|--------|
+| **Vercel** (misma infra que ai4context.com) | **Elegida** |
+| Cloudflare Worker | Descartada por ahora |
+| Cloud Function aparte | No |
 
-URL tentativa: `https://api.ai4context.com/itss/check` o `https://itss.ai4context.com/check`.
+**URL tentativa:** ruta bajo el dominio AI4Context en Vercel, p. ej.  
+`https://www.ai4context.com/api/itss/check`  
+o un proyecto Vercel dedicado `itss-api` con dominio custom / `*.vercel.app` en preview.
+
+Ventajas con Vercel: mismo flujo de deploy que la landing, secrets en el dashboard (`SAFE_BROWSING_API_KEY`), serverless functions (`api/*.ts` o App Router route handlers).
+
+**Encaje con el repo landing actual (`code-rag-java/landing`):**  
+Ya hay funciones en `landing/api/` (`waitlist.ts`, `myai4context-publish.ts`) y `vercel.json` enruta `/api/(.*)`. La opción natural es añadir p. ej. `landing/api/itss-check.ts` → `POST https://www.ai4context.com/api/itss-check` (o el path que use Vercel para ese fichero).
 
 ---
 
@@ -309,14 +316,14 @@ Host permissions: si el proxy es `https://api.ai4context.com/*`, declarar en man
 
 ---
 
-## 13. Decisiones a cerrar antes de codear
+## 13. Decisiones
 
-1. **Hosting del proxy:** ¿Cloudflare Worker, Vercel, u otro endpoint ai4context?  
-2. **Dominio público del API:** URL final para `host_permissions`.  
+1. **Hosting del proxy:** **Vercel** (infra AI4Context) — cerrado 2026-07-26.  
+2. **Dominio / ruta pública del API:** por confirmar (p. ej. `/api/itss/check` en el proyecto landing o proyecto `itss-api` aparte).  
 3. **ToS Safe Browsing:** confirmar uso no comercial OK para AI4Context ahora; plan B Web Risk si hace falta.  
-4. **Rate limits** concretos (números).  
+4. **Rate limits** concretos (números) — propuestos en 2.0.4.
 
-Cuando confirmes **(1) hosting del proxy**, se puede empezar ITSS-2.0 → 2.1.
+**Siguiente paso de implementación:** GCP Safe Browsing key + route handler Vercel (`POST /api/itss/check`) + cablear extensión.
 
 ---
 
