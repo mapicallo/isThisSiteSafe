@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Is this site safe</title>
+    <link rel="icon" type="image/png" sizes="48x48" href="./icons/icon48.png" />
+    <script type="module" crossorigin src="./assets/panel.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/panel-m2188R0s.css">
+  </head>
+  <body>
+    <div class="app itss-shell">
+      <header class="itss-brand-header">
+        <div class="itss-brand-row">
+          <div class="itss-logo">
+            <div class="itss-logo-icon" aria-hidden="true">
+              <img src="./icons/icon48.png" width="44" height="44" alt="" />
+            </div>
+            <div class="itss-logo-text">
+              <h1 class="itss-app-title" data-i18n="appName">Is this site safe</h1>
+              <p class="itss-app-subtitle" data-i18n="byAi4Context">By AI4Context</p>
+            </div>
+          </div>
+          <label class="itss-lang-selector" for="locale-select">
+            <span class="itss-lang-label" data-i18n="langLabel">Language</span>
+            <select id="locale-select" aria-label="Language">
+              <option value="en">English</option>
+              <option value="es">Español</option>
+            </select>
+          </label>
+        </div>
+      </header>
+
+      <main class="itss-scroll">
+        <p class="help" data-i18n="helpOnDemand">
+          Only when you ask. We do not monitor your tabs in the background.
+        </p>
+
+        <div class="actions">
+          <button type="button" class="btn primary" id="check-tab-btn" data-i18n="checkTab">
+            Check this tab
+          </button>
+        </div>
+
+        <label class="field">
+          <span data-i18n="pasteUrl">Or paste a URL</span>
+          <input
+            id="url-input"
+            type="url"
+            inputmode="url"
+            autocomplete="off"
+            spellcheck="false"
+            data-i18n-placeholder="urlPlaceholder"
+            placeholder="https://example.com"
+          />
+        </label>
+        <button type="button" class="btn secondary" id="check-url-btn" data-i18n="checkUrl">
+          Check URL
+        </button>
+
+        <p id="form-error" class="error" hidden></p>
+
+        <section id="result" class="result" hidden>
+          <div id="result-badge" class="result-badge" data-level="orange">
+            <span id="result-level" class="result-level"></span>
+          </div>
+          <p id="result-url" class="result-url"></p>
+          <ul id="result-reasons" class="result-reasons"></ul>
+          <p class="disclaimer" data-i18n="disclaimer"></p>
+          <div class="form-actions">
+            <button type="button" class="btn secondary" id="copy-btn" data-i18n="copySummary">
+              Copy summary
+            </button>
+            <button type="button" class="btn ghost" id="another-btn" data-i18n="checkAnother">
+              Check another
+            </button>
+          </div>
+          <p id="copy-toast" class="toast" hidden data-i18n="copied">Copied</p>
+        </section>
+      </main>
+
+      <div class="itss-version-strip" id="version-strip">v0.1.0</div>
+
+      <footer class="itss-site-footer" role="contentinfo">
+        <div class="itss-site-footer-inner">
+          <div class="itss-footer-brand-cluster">
+            <span class="itss-footer-accent" aria-hidden="true"></span>
+            <img class="itss-footer-brand-img" src="./icons/icon48.png" width="32" height="32" alt="" />
+          </div>
+          <span class="itss-footer-by">
+            <span data-i18n="footerByPrefix">by</span> <strong>AI4Context</strong>
+          </span>
+          <span class="itss-footer-divider" aria-hidden="true"></span>
+          <a
+            class="itss-footer-support"
+            href="https://www.ai4context.com/mission-support"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-i18n="footerSupport"
+            >Support</a
+          >
+          <span class="itss-footer-divider" aria-hidden="true"></span>
+          <a href="#" id="privacy-link" class="itss-footer-support" data-i18n="privacy">Privacy</a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
