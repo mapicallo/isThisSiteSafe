@@ -13,8 +13,9 @@
 | Cuenta CWS | `mapicalopez1971.apps` / email `mapicalloperez1971.apps@gmail.com` |
 | Límite | 20 extensiones publicadas (cupo por defecto) |
 | Solicitud | Enviada el **2026-07-26** vía [One Stop Support](https://support.google.com/chrome_webstore/contact/one_stop_support) → *Mi cuenta de desarrollador* → *Tengo otros problemas con mi cuenta* |
+| Case ID | **7-9974000040937** |
 | Qué pedir | Aumento del *published item limit* / cuota de ítems publicados |
-| Respuesta | Revisar el correo de la cuenta de desarrollador (confirmación + posibles preguntas de Google) |
+| Respuesta (2026-07-27) | Soporte (Resmi) acusó recibo y **escaló** al equipo interno: *“I will escalate your request to the team and get back to you as soon as possible.”* — **aún no hay aumento de cupo**; esperar siguiente correo |
 
 **Alternativa si el aumento tarda:** despublicar temporalmente alguna extensión poco usada para liberar 1 hueco y publicar esta.
 
