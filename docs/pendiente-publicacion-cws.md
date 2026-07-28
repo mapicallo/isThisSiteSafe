@@ -1,25 +1,21 @@
 # Pendiente: publicación en Chrome Web Store
 
 **Producto:** Is this site safe  
-**Estado (2026-07-26):** listo para publicar — **bloqueado por el límite de 20 extensiones** de la cuenta de desarrollador.  
-**Cuando Google apruebe el aumento de cupo → retomar este checklist.**
+**Estado (2026-07-28):** cupo CWS **desbloqueado** — listo para publicar (seguir checklist abajo).
 
 ---
 
-## Bloqueo actual
+## Cupo CWS
 
 | Ítem | Detalle |
 |------|---------|
 | Cuenta CWS | `mapicalopez1971.apps` / email `mapicalloperez1971.apps@gmail.com` |
-| Límite | 20 extensiones publicadas (cupo por defecto) |
-| Solicitud | Enviada el **2026-07-26** vía [One Stop Support](https://support.google.com/chrome_webstore/contact/one_stop_support) → *Mi cuenta de desarrollador* → *Tengo otros problemas con mi cuenta* |
 | Case ID | **7-9974000040937** |
-| Qué pedir | Aumento del *published item limit* / cuota de ítems publicados |
-| Respuesta (2026-07-27) | Soporte (Resmi) acusó recibo y **escaló** al equipo interno: *“I will escalate your request to the team and get back to you as soon as possible.”* — **aún no hay aumento de cupo**; esperar siguiente correo |
+| Solicitud | Enviada el **2026-07-26** vía One Stop Support |
+| Resolución (2026-07-28) | **Aprobado:** *“An additional publishing limit of 20 has been granted to your account.”* → ~**40** ítems publicados permitidos en total |
+| Acción | Ya se puede **añadir / publicar** un ítem nuevo en el Developer Dashboard |
 
-**Alternativa si el aumento tarda:** despublicar temporalmente alguna extensión poco usada para liberar 1 hueco y publicar esta.
-
-**Misma cola que:** Create my AI Context (`C:\code_createMyAIcontext\docs\pendiente-publicacion-cws.md`).
+**Misma cuenta / cupo que:** Create my AI Context (`C:\code_createMyAIcontext\docs\pendiente-publicacion-cws.md`).
 
 ---
 
@@ -73,9 +69,9 @@ También hay copia de los PNG originales en esa carpeta. **Preferir las `screens
 
 ---
 
-## Checklist al autorizar el cupo
+## Checklist al publicar
 
-1. [ ] Confirmar en el Developer Dashboard que se puede **añadir / publicar** un ítem nuevo (o que el cupo ha subido).
+1. [ ] Confirmar en el Developer Dashboard que se puede **añadir / publicar** un ítem nuevo.
 2. [ ] Si el código avanzó desde v0.2.0: `npm run pack` y usar el ZIP nuevo con la versión actualizada.
 3. [ ] **Nuevo ítem** → subir `IsThisSiteSafe-v0.2.0.zip` (o el ZIP regenerado).
 4. [ ] Completar ficha (ver `apps/extension/CHROME_WEB_STORE.md`):

@@ -1,6 +1,6 @@
 # Chrome Web Store — Is this site safe
 
-> **Estado (2026-07-26):** paquete y pantallazos listos; publicación **pendiente del aumento de cupo** (límite 20 extensiones).  
+> **Estado (2026-07-28):** cupo CWS ampliado (+20). Paquete y pantallazos listos — **publicar ahora**.  
 > Checklist completo → [`docs/pendiente-publicacion-cws.md`](../../docs/pendiente-publicacion-cws.md)  
 > ZIP: `releases/IsThisSiteSafe-v0.2.0.zip` · Capturas: `C:\pantallazos\isThisSiteSafe\` + `store-assets/*-1280x800.png`
 
